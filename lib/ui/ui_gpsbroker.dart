@@ -12,6 +12,7 @@ TextStyle styleFontCoord =
     const TextStyle(fontFamily: "Roboto", fontSize: 20.0);
 const espacamento = Padding(padding: EdgeInsets.all(6));
 TextEditingController soldCliente = TextEditingController();
+TextEditingController codVendedor = TextEditingController();
 TextEditingController lat = TextEditingController();
 late Location _localizacao = Location();
 bool _loading = false;
@@ -58,12 +59,13 @@ class _UiGpsState extends State<UiGps> {
       var response = await http.post(
           Uri.parse('https://brokersaoluis.com.br/apis-appgps/insert.php'),
           body: {
+            "cod_vendedor": codVendedor.text.toString(),
             "sold": soldCliente.text.toString(),
             "coord": coordenadas.toString(),
             "foto_faixada": imgAutenticacao.toString()
           });
       setState(() {
-        const oneSec = Duration(milliseconds: 50);
+        const oneSec = Duration(milliseconds: 80);
         Timer.periodic(oneSec, (Timer t) {
           setState(() {
             progresValue += 0.1;
@@ -99,6 +101,11 @@ class _UiGpsState extends State<UiGps> {
                                     style: TextStyle(color: Color(0xff2A4968))))
                           ],
                         ));
+                _StringPosicaoLat = '';
+                _StringPosicaoLong = '';
+                soldCliente.clear();
+                codVendedor.clear();
+                storedImage = null;
               }
             }
           });
@@ -178,6 +185,21 @@ class _UiGpsState extends State<UiGps> {
                         ),
                         espacamento,
                         Flexible(
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            style: style,
+                            controller: codVendedor,
+                            onChanged: (text) => {},
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(6),
+                              labelText: "Cod Vendedor",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0)),
+                            ),
+                          ),
+                        ),
+                        espacamento,
+                        Flexible(
                             child: IconButton(
                           icon: const Icon(Icons.gps_fixed),
                           onPressed: () {
@@ -237,7 +259,7 @@ class _UiGpsState extends State<UiGps> {
                     espacamento,
                     _StringPosicaoLat != ''
                         ? Text(
-                            "|${soldCliente.text}||||$_StringPosicaoLat|$_StringPosicaoLong|S",
+                            coordenadas,
                             style: styleFontCoord,
                           )
                         : const Text(''),
@@ -285,6 +307,7 @@ class _UiGpsState extends State<UiGps> {
                               onPressed: () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
+
                                 _verificacao();
                               },
                               child: const Text('Enviar'),
