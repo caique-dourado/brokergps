@@ -55,7 +55,10 @@ class _AbrirCameraState extends State<AbrirCamera> {
         size: 40,
       ),
       color: const Color(0xff2A4968),
-      onPressed: _takePicture,
+      onPressed: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        _takePicture();
+      },
     );
 
     return Flexible(
