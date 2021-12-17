@@ -18,7 +18,7 @@ late Location _localizacao = Location();
 bool _loading = false;
 String _status = 'Não enviado';
 double progresValue = 0;
-late String coordenadas;
+late String coordenadas = '';
 
 class UiGps extends StatefulWidget {
   const UiGps({Key? key, required this.title}) : super(key: key);
@@ -129,6 +129,58 @@ class _UiGpsState extends State<UiGps> {
                 title: const Text("Aviso"),
                 content: const Text(
                   "Prezado vendedor, realize a captura da faixada do cliente",
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shadowColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                          textStyle: MaterialStateProperty.all(const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Roboto',
+                              color: Colors.black))),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Ok',
+                          style: TextStyle(color: Color(0xff2A4968))))
+                ],
+              ));
+      // ignore: unnecessary_null_comparison
+    } else if (soldCliente.text.toString() == '' ||
+        codVendedor.text.toString() == '') {
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: const Text("Aviso"),
+                content: const Text(
+                  "Prezado vendedor, existem campos em branco (sold ou cód. vendedor)",
+                  textAlign: TextAlign.center,
+                ),
+                actions: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          shadowColor:
+                              MaterialStateProperty.all(Colors.transparent),
+                          textStyle: MaterialStateProperty.all(const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Roboto',
+                              color: Colors.black))),
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Ok',
+                          style: TextStyle(color: Color(0xff2A4968))))
+                ],
+              ));
+    } else if (coordenadas.isEmpty) {
+      showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: const Text("Aviso"),
+                content: const Text(
+                  "Prezado vendedor, você deve capturar a coordenada do cliente",
                   textAlign: TextAlign.center,
                 ),
                 actions: [
